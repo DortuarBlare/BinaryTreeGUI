@@ -18,12 +18,6 @@ import scalafx.scene.layout.VBox
 import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
 
 object BinaryTreeApp extends JFXApp3 {
-  class TreeTableElement(val size: String, val leftDepth: String, val rightDepth: String) {
-    val treeSize = new StringProperty(size)
-    val leftSubtreeDepth = new StringProperty(leftDepth)
-    val rightSubtreeDepth = new StringProperty(rightDepth)
-  }
-
   class NodeTableElement(val index: String,  val value: String,     val weight: String,
                          val parent: String, val leftChild: String, val rightChild: String) {
     val nodeIndex = new StringProperty(index)
@@ -32,15 +26,6 @@ object BinaryTreeApp extends JFXApp3 {
     val nodeParent = new StringProperty(parent)
     val nodeLeftChild = new StringProperty(leftChild)
     val nodeRightChild = new StringProperty(rightChild)
-  }
-
-  class ObjectInputStreamWithCustomClassLoader(
-                                                fileInputStream: FileInputStream
-                                              ) extends ObjectInputStream(fileInputStream) {
-    override def resolveClass(desc: java.io.ObjectStreamClass): Class[_] = {
-      try { Class.forName(desc.getName, false, getClass.getClassLoader) }
-      catch { case ex: ClassNotFoundException => super.resolveClass(desc) }
-    }
   }
 
   private var box: VBox = null
@@ -103,7 +88,7 @@ object BinaryTreeApp extends JFXApp3 {
     }
     val loadFileItem = new MenuItem("Load")
     loadFileItem.onAction = (event: ActionEvent) => {
-      val ois = new ObjectInputStreamWithCustomClassLoader(
+      val ois = new ObjectInputStream(
         new FileInputStream("res/BinaryTree.txt"))
       if (intBinaryTree != null) {
         intBinaryTree = ois.readObject.asInstanceOf[BinaryTree[Int]]
@@ -305,7 +290,6 @@ object BinaryTreeApp extends JFXApp3 {
   }
 
   def updateTables() = {
-    var treeData: ObservableBuffer[TreeTableElement] = null
     var nodeData: ObservableBuffer[NodeTableElement] = null
     var index = 0
 
