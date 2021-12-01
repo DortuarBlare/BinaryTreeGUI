@@ -14,7 +14,6 @@ class BinaryTree[Type](@transient private var comparator: Traits.Comparator) ext
       var currentNode = root
 
       while (true) {
-        //if (newNode < currentNode) { // Двигаемся влево
         if (comparator.compare(newNode.getValue, currentNode.getValue) < 0) {
           if (currentNode.getLeftChild != null) {
             currentNode = currentNode.getLeftChild
@@ -132,7 +131,6 @@ class BinaryTree[Type](@transient private var comparator: Traits.Comparator) ext
     val nodeToFind = new Node(value)
 
     while (comparator.compare(value, currentNode.getValue) != 0) {
-      //if (nodeToFind < currentNode) currentNode = currentNode.getLeftChild
       if (comparator.compare(nodeToFind.getValue, currentNode.getValue) < 0) currentNode = currentNode.getLeftChild
       else currentNode = currentNode.getRightChild
 
@@ -255,18 +253,15 @@ class BinaryTree[Type](@transient private var comparator: Traits.Comparator) ext
             nextNode = nextNode.getLeftChild
           }
 
-          //if (currentNode < nextNode)
           if (comparator.compare(currentNode.getValue, nextNode.getValue) < 0)
             action.doWith(nextNode)
         }
         else if (nextNode.getParent != null) { // Иначе поднимаемся по родителям пока не найдем узел с бо'льшим значением
-          //breakable(while (currentNode > nextNode.getParent) {
           breakable(while (comparator.compare(currentNode.getValue, nextNode.getParent.getValue) > 0) {
             nextNode = nextNode.getParent
             if (nextNode.getParent == null) break
           })
           if (nextNode.getParent != null) {
-            //if (currentNode < nextNode.getParent) {
             if (comparator.compare(currentNode.getValue, nextNode.getParent.getValue) < 0) {
               nextNode = nextNode.getParent
               action.doWith(nextNode)
